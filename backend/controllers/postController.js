@@ -18,6 +18,22 @@ async function getPosts(req, res) {
   }
 }
 
+async function getPost(req, res) {
+  const { postId } = req.params;
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: parseInt(postId),
+      },
+    });
+    return res.status(200).json(post);
+  } catch (err) {
+    return res.status(400).json({ error: "Cannot get post" });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 async function createPost(req, res) {
   const { title, content } = req.body;
   try {
@@ -37,7 +53,7 @@ async function createPost(req, res) {
 }
 
 async function deletePost(req, res) {
-  const { postId } = req.body;
+  const { postId } = req.params;
   try {
     const post = await prisma.post.delete({
       where: {
@@ -57,7 +73,8 @@ async function deletePost(req, res) {
 }
 
 async function updatePost(req, res) {
-  const { postId, title, content, published } = req.body;
+  const { title, content, published } = req.body;
+  const { postId } = req.params;
   try {
     const post = await prisma.post.update({
       where: {
@@ -77,4 +94,4 @@ async function updatePost(req, res) {
   }
 }
 
-export { getPosts, createPost, deletePost, updatePost };
+export { getPosts, createPost, deletePost, updatePost, getPost };
