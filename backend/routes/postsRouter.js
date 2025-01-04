@@ -9,12 +9,14 @@ import {
   authenticateJWT,
   authorizeAdmin,
 } from "../middleware/authMiddleware.js";
+import commentsRouter from "./commentsRouter.js";
 
 const postsRouter = Router();
 
+postsRouter.use("/:postId/comments", commentsRouter);
 postsRouter.get("/", authenticateJWT, getPosts);
 postsRouter.post("/", authenticateJWT, authorizeAdmin, createPost);
-postsRouter.put("/", authenticateJWT, authorizeAdmin, updatePost);
-postsRouter.delete("/", authenticateJWT, authorizeAdmin, deletePost);
+postsRouter.put("/:postId", authenticateJWT, authorizeAdmin, updatePost);
+postsRouter.delete("/:postId", authenticateJWT, authorizeAdmin, deletePost);
 
 export default postsRouter;
