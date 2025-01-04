@@ -4,10 +4,10 @@ async function getPosts(req, res) {
   try {
     const posts =
       req.user.role.toLowerCase() === "admin"
-        ? await prisma.post.findMany({})
+        ? await prisma.post.findMany()
         : await prisma.post.findMany({
             where: {
-              published: false,
+              published: true,
             },
           });
     res.status(200).json(posts);
