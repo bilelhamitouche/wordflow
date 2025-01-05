@@ -16,7 +16,7 @@ const postsRouter = Router();
 postsRouter.use("/:postId/comments", commentsRouter);
 postsRouter.get("/", authenticateJWT, getPosts);
 postsRouter.post("/", authenticateJWT, authorizeAdmin, createPost);
-postsRouter.put("/:postId", authenticateJWT, authorizeAdmin, updatePost);
+postsRouter.patch("/:postId", authenticateJWT, authorizeAdmin, updatePost);
 postsRouter.delete("/:postId", authenticateJWT, authorizeAdmin, deletePost);
 
 export default postsRouter;
