@@ -39,4 +39,43 @@ async function createComment(req, res) {
   }
 }
 
-export { getComments, createComment };
+async function updateComment(req, res) {
+  const { commentId } = req.params;
+  const { content } = req.body;
+  try {
+    const comment = await prisma.comment.update({
+      where: {
+        id: parseInt(commentId),
+      },
+      data: {
+        ...(content && { content }),
+      },
+    });
+    return res.status(200).json(comment);
+  } catch (err) {
+    return res.status(400).json({ error: "Cannot edit comment" });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+async function deleteComment(req, res) {
+  const { commentId } = req.params;
+  try {
+    const comment = await prisma.comment.delete({
+      where: {
+        id: parseInt(commentId),
+      },
+    });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    return res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (err) {
+    return res.status(400).json({ error: "Cannot delete comment" });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export { getComments, createComment, deleteComment, updateComment };
