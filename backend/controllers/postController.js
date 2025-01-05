@@ -81,9 +81,11 @@ async function updatePost(req, res) {
         id: parseInt(postId),
       },
       data: {
-        title,
-        content,
-        published: published.toLowerCase() === "false" ? false : true,
+        ...(title && { title }),
+        ...(content && { content }),
+        ...(published && {
+          published: published.toLowerCase() === "false" ? false : true,
+        }),
       },
     });
     return res.status(200).json(post);
